@@ -1,0 +1,12 @@
+[package]
+name = "ivygen"
+version = "0.1.0"
+authors = ["florianfelix <florianfelixmeyer@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+nalgebra = "0.20.0"
+ncollide3d = "0.22.0"
+kiss3d = "0.23.0"
+alga = "0.9.3"
+approx   = "0.3.2"
