@@ -13,17 +13,21 @@ pub fn random_walk() -> Vec<Point3<f32>> {
     result
 }
 
-pub fn vine() -> Vec<Point3<f32>> {
+pub fn vine(count: usize) -> Vec<Point3<f32>> {
     let mut vine: Vec<Point3<f32>> = vec![Point3::new(0.0, 0.0, 0.0)];
 
-    let count = 30;
+    // let count = 30;
     let part_length = 0.1;
     let v_up = Vector3::new(0.0, 1.0, 0.0);
-    let up_weight = 0.2;
-    let direc_weight = 1.0;
+
+    let random_weight = 1.0;
+    let up_weight = 0.0;
+    let direc_weight = 0.0;
 
     for i in 0..count {
-        let mut v = random_unit_vector();
+        // RANDOM
+        let mut v = random_unit_vector() * random_weight;
+
         // UP
         v = v + v_up * up_weight;
 

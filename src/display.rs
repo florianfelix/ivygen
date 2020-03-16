@@ -7,6 +7,7 @@ pub fn setup() -> Window {
     println!("Setup");
     let mut window = Window::new("Kiss3d: cube");
     window.set_title("Test Cube");
+    window.set_point_size(6.0);
 
     // let mut c      = window.add_cube(1.0, 1.0, 1.0);
     // let mut monkey = window.add_obj(
