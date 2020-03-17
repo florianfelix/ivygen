@@ -1,21 +1,30 @@
 #![allow(dead_code)]
 #![allow(unused_imports)]
 
-// use nalgebra::Point3;
-// use kiss3d::window::Window;
-use kiss3d::window::Window;
-use kiss3d::event::{Action, Key, WindowEvent, Modifiers};
-use nalgebra::Point3;
 mod display;
 mod random_walk;
 mod utils_r;
 mod vine;
 
-fn main() {
-    let mut count: usize = 30;
-    let mut points = random_walk::vine(count);
-    // println!("{:?}", points);
+// use nalgebra::Point3;
+// use kiss3d::window::Window;
+use kiss3d::window::Window;
+use kiss3d::event::{Action, Key, WindowEvent, Modifiers};
+use nalgebra::Point3;
+use oorandom;
 
+fn main() {
+    // BASE VINE
+    let mut vine_settings = vine::VineSettings::new(
+        30,
+        0.1,
+        1.5,
+        0.5,
+        1.0
+    );
+    let mut points = random_walk::vine(&mut vine_settings);
+    
+    // WINDOW SETUP
     let mut window = display::setup();
 
     // HARDCODED VARS
@@ -32,13 +41,15 @@ fn main() {
                     if key == Key::A {
 
                     } else if key == Key::Space {
-                        points = random_walk::vine(count);
+                        points = random_walk::vine(&mut vine_settings);
                     } else if key == Key::PageUp {
-                        count += 10;
-                        points = random_walk::vine(count);
+                        vine_settings.count += 10;
+                        points = random_walk::vine(&mut vine_settings);
                     } else if key == Key::PageDown {
-                        count -= 10;
-                        points = random_walk::vine(count);
+                        if vine_settings.count > 11 {
+                            vine_settings.count -= 10;
+                        }
+                        points = random_walk::vine(&mut vine_settings);
                     }
                 },
                 WindowEvent::Scroll(n1, n2, Modifiers::Shift) => {
@@ -48,6 +59,7 @@ fn main() {
             }
         }
 
+        // RENDER VINES AS POINTS AND LINES
         for (i, p) in points.iter().enumerate() {
             window.draw_point(&p, &Point3::new(1.0, 0.0, 0.0));
             if i > 0 {
@@ -55,7 +67,7 @@ fn main() {
             }
         }
 
-        // Axais
+        // DRAW WORLD SPACE AXIS
         window.draw_line(&origin, &xa, &xa);
         window.draw_line(&origin, &ya, &ya);
         window.draw_line(&origin, &za, &za);
@@ -63,19 +75,3 @@ fn main() {
 
     }
 }
-
-// fn draw_lines(&mut w: Window, points: Vec<Point3<f32>>) {
-    //     for (i, p) in points.iter().enumerate() {
-        //         let len = points.len();
-        //         if i < len {
-            //             if i > 0 {
-                //                 w.draw_line(&points[i-1], &points[i], &Point3::new(1.0, 1.0, 1.0))
-                //             }
-                //         }
-                //     }
-                // }
-                
-// draw_lines(window, rw);
-// window.draw_line(&rw[0], &rw[1], &Point3::new(1.0, 1.0, 1.0));
-// monkey.prepend_to_local_rotation(&rot);
-// window.draw_point(&Point3::new(1.0, 1.0, 0.0), &Point3::new(1.0, 1.0, 1.0));
