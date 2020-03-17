@@ -8,22 +8,17 @@ mod vine;
 
 // use nalgebra::Point3;
 // use kiss3d::window::Window;
+use kiss3d::event::{Action, Key, Modifiers, WindowEvent};
+use kiss3d::text::{Font, TextRenderer};
 use kiss3d::window::Window;
-use kiss3d::event::{Action, Key, WindowEvent, Modifiers};
-use nalgebra::Point3;
+use nalgebra::{Point2, Point3};
 use oorandom;
+use std::path::Path;
 
 fn main() {
     // BASE VINE
-    let mut vine_settings = vine::VineSettings::new(
-        30,
-        0.1,
-        1.5,
-        0.5,
-        1.0
-    );
+    let mut vine_settings = vine::VineSettings::new(30, 0.1, 1.5, 0.5, 1.0);
     let mut points = random_walk::vine(&mut vine_settings);
-    
     // WINDOW SETUP
     let mut window = display::setup();
 
@@ -33,13 +28,21 @@ fn main() {
     let ya = Point3::new(0.0, 1.0, 0.0);
     let za = Point3::new(0.0, 0.0, 1.0);
 
-    
+    // TEXT
+    let font = Font::new(Path::new("./fonts/ShareTechMono-Regular.ttf")).unwrap();
+    let text = "
+    Zoom Out    : MouseWheel Forward
+    Zoom In     : MouseWheel Backward
+    Rotate      : Left Mouse Drag
+    New Vine    : Spacebar
+    + 10 Points : PageUp
+    - 10 Points : PageDown";
+
     while window.render() {
         for event in window.events().iter() {
             match event.value {
                 WindowEvent::Key(key, Action::Press, _) => {
                     if key == Key::A {
-
                     } else if key == Key::Space {
                         points = random_walk::vine(&mut vine_settings);
                     } else if key == Key::PageUp {
@@ -51,10 +54,8 @@ fn main() {
                         }
                         points = random_walk::vine(&mut vine_settings);
                     }
-                },
-                WindowEvent::Scroll(n1, n2, Modifiers::Shift) => {
-                    println!("{} {}", n1, n2)
                 }
+                WindowEvent::Scroll(n1, n2, Modifiers::Shift) => println!("{} {}", n1, n2),
                 _ => {}
             }
         }
@@ -72,6 +73,14 @@ fn main() {
         window.draw_line(&origin, &ya, &ya);
         window.draw_line(&origin, &za, &za);
 
-
+        // TEXT RENDER
+        window.draw_text(
+            text,
+            &Point2::new(4.0, 8.0),
+            40.0,
+            &font,
+            &Point3::new(1.0, 1.0, 1.0)
+        );
+        // trender.render(600.0, 600.0);
     }
 }

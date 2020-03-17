@@ -8,6 +8,8 @@ pub fn setup() -> Window {
     let mut window = Window::new("Kiss3d: cube");
     window.set_title("Ivigen");
     window.set_point_size(4.0);
+    window.set_background_color(0.1, 0.1, 0.1);
+    
 
     // let mut c      = window.add_cube(1.0, 1.0, 1.0);
     // let mut monkey = window.add_obj(
