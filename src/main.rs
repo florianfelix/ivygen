@@ -43,6 +43,13 @@ fn main() {
             match event.value {
                 WindowEvent::Key(key, Action::Press, _) => {
                     if key == Key::A {
+                        window.draw_text(
+                            &vine_settings.count.to_string(),
+                            &Point2::new(30.0, 330.0),
+                            40.0,
+                            &font,
+                            &Point3::new(1.0, 1.0, 1.0),
+                        );
                     } else if key == Key::Space {
                         points = random_walk::vine(&mut vine_settings);
                     } else if key == Key::PageUp {
@@ -79,8 +86,7 @@ fn main() {
             &Point2::new(4.0, 8.0),
             40.0,
             &font,
-            &Point3::new(1.0, 1.0, 1.0)
+            &Point3::new(1.0, 1.0, 1.0),
         );
-        // trender.render(600.0, 600.0);
     }
 }
