@@ -69,11 +69,19 @@ impl Vine {
 
             node.position = prev_node.position + vec_grow;
             node.grow_direction = node.position - prev_node.position;
+            node.vine_length = prev_node.vine_length + nalgebra::Matrix::norm(&node.grow_direction);
 
             self.nodes.push(node);
             // last_index += 1;
         }
         self
+    }
+    pub fn regrow(mut self) -> Vine {
+        let count = self.nodes.len();
+        let start = self.nodes[0].clone();
+        self.nodes.clear();
+        self.nodes.push(start);
+        self.grow(count - 1)
     }
 }
 
@@ -108,11 +116,11 @@ impl VineSettings {
 }
 
 // VINENODE
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct VineNode {
     pub position: Point3<f32>,
     pub shape: Capsule<f32>,
-    pub length: Option<f32>,
+    pub vine_length: f32,
     pub floating_length: Option<f32>,
     pub sticking_since: Option<usize>,
     pub surface_direction: Option<Vector3<f32>>,
@@ -124,7 +132,7 @@ impl VineNode {
         VineNode {
             position: Point3::new(0.0, 0.0, 0.0),
             shape: Capsule::new(0.2, 0.1),
-            length: None,
+            vine_length: 0.0,
             floating_length: None,
             sticking_since: None,
             surface_direction: None,
