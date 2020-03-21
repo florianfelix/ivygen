@@ -22,13 +22,13 @@ impl Ivy {
 }
 
 // VINE
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Vine {
     pub settings: VineSettings,
     pub nodes: Vec<VineNode>,
-    // pub parent: Option<&'a Vine>,
     pub origin: Point3<f32>,
-    children: Vec<Vine>,
+    pub children: Vec<Vine>,
+    max_children: usize,
 }
 
 impl Vine {
@@ -38,6 +38,7 @@ impl Vine {
             nodes: vec![],
             origin: Point3::new(0.0, 0.0, 0.0),
             children: vec![],
+            max_children: 3,
         }
     }
     pub fn seed(mut self) -> Vine {
@@ -72,7 +73,13 @@ impl Vine {
             node.vine_length = prev_node.vine_length + nalgebra::Matrix::norm(&node.grow_direction);
 
             self.nodes.push(node);
-            // last_index += 1;
+            
+            // TEST FOR SPLIT
+            // if self.settings.rng.rand_float() < self.settings.child_probability {
+            //     if self.children.len() <= self.max_children {
+            //         self.children.push(Vine::new().seed().grow(10))
+            //     }
+            // }
         }
         self
     }
@@ -85,10 +92,11 @@ impl Vine {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct VineSettings {
     pub rng: Rand32,
     pub count: usize,
+    pub child_probability: f32,
     pub part_length: f32,
     pub weight_random: f32,
     pub weight_up: f32,
@@ -99,6 +107,7 @@ impl VineSettings {
     pub fn new(
         // rng: Rand32,
         count: usize,
+        // child_probability: usize,
         part_length: f32,
         weight_random: f32,
         weight_up: f32,
@@ -106,6 +115,7 @@ impl VineSettings {
     ) -> VineSettings {
         VineSettings {
             rng: Rand32::new_inc(1, 2),
+            child_probability: 0.1,
             count,
             part_length,
             weight_random,

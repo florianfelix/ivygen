@@ -59,16 +59,17 @@ pub fn setup(mut ivy: Ivy) -> Window {
             }
         }
 
-        for (i, node) in ivy.root.nodes.iter().enumerate() {
-            window.draw_point(&node.position, &Point3::new(0.0, 1.0, 0.0));
-            if i > 0 {
-                window.draw_line(
-                    &node.position,
-                    &ivy.root.nodes[i - 1].position,
-                    &Point3::new(1.0, 1.0, 1.0),
-                )
-            }
-        }
+        // for (i, node) in ivy.root.nodes.iter().enumerate() {
+        //     window.draw_point(&node.position, &Point3::new(0.0, 1.0, 0.0));
+        //     if i > 0 {
+        //         window.draw_line(
+        //             &node.position,
+        //             &ivy.root.nodes[i - 1].position,
+        //             &Point3::new(1.0, 1.0, 1.0),
+        //         )
+        //     }
+        // }
+        window = draw_vine(window, ivy.root.clone());
 
         // DRAW WORLD SPACE AXIS
         window.draw_line(&origin, &xa, &xa);
@@ -99,5 +100,22 @@ pub fn setup(mut ivy: Ivy) -> Window {
 
     // let rot = UnitQuaternion::from_axis_angle(&Vector3::y_axis(), 0.014);
 
+    window
+}
+
+fn draw_vine(mut window: Window, v: Vine) -> Window {
+    for (i, node) in v.nodes.iter().enumerate() {
+        window.draw_point(&node.position, &Point3::new(0.0, 1.0, 0.0));
+        if i > 0 {
+            window.draw_line(
+                &node.position,
+                &v.nodes[i - 1].position,
+                &Point3::new(1.0, 1.0, 1.0),
+            )
+        }
+    }
+    // for child in v.children.iter() {
+        // window = draw_vine(window, child.clone());
+    // }
     window
 }
