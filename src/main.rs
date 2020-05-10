@@ -6,6 +6,9 @@ mod random_walk;
 mod utils_r;
 mod ivystructs;
 
+mod vine;
+mod context;
+
 
 fn main() {
     let ivy = ivystructs::Ivy::new();
