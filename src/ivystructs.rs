@@ -9,15 +9,36 @@ use crate::random_walk::grow_vector;
 pub struct Ivy {
     // pub settings: IvySettings,
     pub root: Vine,
+    pub vines: Vec<Vine>,
     pub colliders: Vec<TriMesh<f32>>,
+    pub rng: oorandom::Rand32,
 }
 
 impl Ivy {
     pub fn new() -> Ivy {
         Ivy {
-            root: Vine::new().seed().grow(10),
+            root: Vine::new(0, &Point3::new(0.0, 0.0, 0.0)).seed().grow(10),
+            vines: vec![Vine::new(0, &Point3::new(0.0, 0.0, 0.0)).seed().grow(10)],
             colliders: vec![],
+            rng: oorandom::Rand32::new(1),
         }
+    }
+    pub fn grow_vines(mut self, from_level: usize) {
+        let vine_count = self.vines.len();
+        let mut finished = 0;
+        let mut current_depth = from_level;
+        while finished < vine_count {
+            for vine in &mut self.vines.iter() {
+                if vine.depth == current_depth {
+                    // &vine.grow(self.rng, 10);
+                }
+            }
+            current_depth += 1;
+        }
+    }
+    pub fn add_vine(mut self, depth: usize, origin: &Point3<f32>, node_count: usize) {
+        let mut vine = Vine::new(depth, origin).seed().grow(node_count);
+        self.vines.push(vine);
     }
 }
 
@@ -28,16 +49,18 @@ pub struct Vine {
     pub nodes: Vec<VineNode>,
     pub origin: Point3<f32>,
     pub children: Vec<Vine>,
+    depth: usize,
     max_children: usize,
 }
 
 impl Vine {
-    pub fn new() -> Vine {
+    pub fn new(depth: usize, origin: &Point3<f32>) -> Vine {
         Vine {
             settings: VineSettings::new(30, 0.1, 1.5, 0.5, 1.0),
             nodes: vec![],
-            origin: Point3::new(0.0, 0.0, 0.0),
+            origin: origin.clone(),
             children: vec![],
+            depth,
             max_children: 3,
         }
     }
@@ -73,13 +96,19 @@ impl Vine {
             node.vine_length = prev_node.vine_length + nalgebra::Matrix::norm(&node.grow_direction);
 
             self.nodes.push(node);
-            
             // TEST FOR SPLIT
-            // if self.settings.rng.rand_float() < self.settings.child_probability {
-            //     if self.children.len() <= self.max_children {
-            //         self.children.push(Vine::new().seed().grow(10))
-            //     }
-            // }
+            if self.depth < 2 {
+                if self.settings.rng.rand_float() < self.settings.child_probability {
+                    if self.children.len() <= self.max_children {
+                        println!("SEEDING CHILD",);
+                        self.children.push(
+                            Vine::new(self.depth + 1, &self.nodes[last_index + i].position.clone())
+                                .seed()
+                                .grow(10),
+                        );
+                    }
+                }
+            }
         }
         self
     }

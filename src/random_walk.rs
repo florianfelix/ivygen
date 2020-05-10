@@ -1,8 +1,8 @@
 use nalgebra::{Point3, Vector3};
 
 use crate::utils_r::random_unit_vector;
-use crate::vine::VineSettings;
-use crate::vine::{VineNode};
+use crate::ivystructs::VineSettings;
+use crate::ivystructs::{VineNode};
 
 pub fn grow_vector(settings: &mut VineSettings, prev_node: &VineNode) -> Vector3<f32> {
     

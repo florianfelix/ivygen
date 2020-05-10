@@ -1,5 +1,5 @@
 // use kiss3d::window::Window;
-use crate::vine::{Ivy, Vine, VineNode, VineSettings};
+use crate::ivystructs::{Ivy, Vine, VineNode, VineSettings};
 use nalgebra::{Point2, Point3, Translation3, UnitQuaternion, Vector3};
 use std::path::Path;
 
@@ -114,8 +114,8 @@ fn draw_vine(mut window: Window, v: Vine) -> Window {
             )
         }
     }
-    // for child in v.children.iter() {
-        // window = draw_vine(window, child.clone());
-    // }
+    for child in v.children.iter() {
+        window = draw_vine(window, child.clone());
+    }
     window
 }

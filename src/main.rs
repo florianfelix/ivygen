@@ -4,11 +4,11 @@
 mod display;
 mod random_walk;
 mod utils_r;
-mod vine;
+mod ivystructs;
 
 
 fn main() {
-    let ivy = vine::Ivy::new();
+    let ivy = ivystructs::Ivy::new();
 
     // WINDOW SETUP
     display::setup(ivy);
